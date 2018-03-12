@@ -7,8 +7,8 @@ import matplotlib.markers as markers
 import numpy as np
 
 PROTEIN_DATA = '..\data\Protein export list.csv'
-GCMS_DATA_COL0= '..\data\Col0 GCMS.csv'
-GCMS_DATA_FUM2= '..\data\fum2 GCMS.csv'
+RAW_GCMS= '..\\data\\'
+GCMS_DATA_FUM2= r'..\data\fum2 GCMS.csv'
 FTIR_DATA='..\data\Cold FTIR.csv'
 
 class DataAnalyser():
@@ -49,8 +49,7 @@ class DataAnalyser():
 
     def main(self):
         self.log2=True
-        path = PROTEIN_DATA
-        el.check_file_exists(path)
+        path = RAW_GCMS
         clean_data = el.transform_to_dataframe(path)
         PCAprocessor = PCA.PCAtransformer(clean_data)
 
