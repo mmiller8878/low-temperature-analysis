@@ -7,7 +7,7 @@ import matplotlib.markers as markers
 import numpy as np
 
 PROTEIN_DATA = '..\data\Protein export list.csv'
-RAW_GCMS= '..\\data\\'
+RAW_GCMS= '..\\data\\data2\\'
 GCMS_DATA_FUM2= r'..\data\fum2 GCMS.csv'
 FTIR_DATA='..\data\Cold FTIR.csv'
 

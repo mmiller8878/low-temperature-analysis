@@ -33,16 +33,19 @@ def transform_to_dataframe(path):
             if 'Cold Day' in filename or 'Control day' in filename:
                 if '~$' in filename:
                     continue
-                data=pd.read_excel(path + filename)
-                if 'Col-0 Cold Day 2 8h' in filename or 'Fum2 Cold Day 2 4h.xlsx' in filename:
-                    data = data.iloc[1:, [0,4,5,6,7,8]]
-                else:
-                    data = data.iloc[1:,[4,6,10,14,18,22]]
+                data=pd.read_excel(path + filename, index_col=None)
+
+                data.reset_index(inplace=True)
+                data = data.iloc[1:, [0, 4, 5, 6, 7, 8]]
+                #if 'Col-0 Cold Day 2 8h' in filename or 'Fum2 Cold Day 2 4h.xlsx' in filename:
+                #data = data.iloc[1:, [0,4,5,6,7,8]]
+                #else:
+                #    data = data.iloc[1:,[4,6,10,14,18,22]]
 
                 data=data[pd.notnull(data.iloc[:,0]) ]
                 data=data[data.iloc[:,0].str.contains('Unknown') == False]
 
-                COLNAMES=['Compound', '{} 1', '{} 2', '{} 3', '{} 4', '{} 5']
+                COLNAMES=['Compound','{} 1', '{} 2', '{} 3', '{} 4', '{} 5']
                 COLNAMES=[col.format(filename.split('.xlsx')[0]) for col in COLNAMES]
                 data.columns=COLNAMES
                 data.set_index(keys='Compound', drop=True, inplace=True)
