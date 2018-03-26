@@ -48,14 +48,14 @@ class DataAnalyser():
         plt.ylim([min(pca_loadings[1]), max(pca_loadings[1])])
 
     def main(self):
-        self.log2=True
+        self.log2=False
         path = RAW_GCMS
         clean_data = el.transform_to_dataframe(path)
         PCAprocessor = PCA.PCAtransformer(clean_data)
 
 
         #histplot.plot_histogram(clean_data)
-        PCAprocessor.find_optimal_PCs(clean_data)
+        #PCAprocessor.find_optimal_PCs(clean_data)
         scores, loadings= PCAprocessor.calculate_PCA(log2=self.log2)
         self.plot_PCA_scores(scores, PCAprocessor.get_sample_samplelabels_for_PCA())
         self.plot_PCA_loadings(loadings, PCAprocessor.get_value_labels(), write_loadings=False)

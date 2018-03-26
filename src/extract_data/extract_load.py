@@ -27,7 +27,8 @@ def transform_to_dataframe(path):
         return  clean_data
 
     else:
-        dataframe_list=[]
+        counter=0
+        merged=pd.DataFrame()
         for filename in os.listdir(path):
             print(filename)
             if 'Cold Day' in filename or 'Control day' in filename:
@@ -37,22 +38,11 @@ def transform_to_dataframe(path):
 
                 data.reset_index(inplace=True)
 
-                #print(data.iloc[0,:])
                 data =  data[~data.apply(lambda row: row.astype(str).str.contains('Area', case=False).any(), axis=1)]
 
-                # if data.iloc[0,4]=='Area':
-                #     data = data.iloc[1:, [0, 4, 5, 6, 7, 8]]
-                # else:
-                #     data = data.iloc[:, [0, 4, 5, 6, 7, 8]]
-
-
-
-                #if 'Col-0 Cold Day 2 8h' in filename or 'Fum2 Cold Day 2 4h.xlsx' in filename:
                 data = data.iloc[:, [0,4,5,6,7,8]]
-                #else:
-                #    data = data.iloc[1:,[4,6,10,14,18,22]]
+
                 data=data[pd.notnull(data.iloc[:,0]) ]
-                #print(data.iloc[:,0])
                 data=data[data.iloc[:,0].str.contains('Unknown') == False]
 
                 COLNAMES=['Compound','{} 1', '{} 2', '{} 3', '{} 4', '{} 5']
@@ -61,11 +51,12 @@ def transform_to_dataframe(path):
                 data.set_index(keys='Compound', drop=True, inplace=True)
                 newindex=pd.Series([data.split('_')[0] for data in data.index.values])
                 data.set_index(keys=newindex, drop = True, inplace = True)
-                dataframe_list.append(data)
-        joined = dataframe_list[0].join(other=dataframe_list[1:], how='outer')
-        groups = joined.groupby(level=0, axis=1).sum()
+                data = data.groupby(data.index).sum()
+                merged = data if counter is 0 else pd.merge(data, merged, left_index=True, right_index=True)
+                counter+=1
 
-        print(joined)
+        return merged
+
 
 
 
