@@ -2,9 +2,11 @@ import pandas as pd
 from src.extract_data import extract_load as el
 from src.plot import PCA
 from src.plot import histogram as histplot
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.markers as markers
-import numpy as np
+import matplotlib._color_data as mcd
+import matplotlib.patches as mpatch
 
 PROTEIN_DATA = '..\data\Protein export list.csv'
 RAW_GCMS= '..\\data\\data2\\'
@@ -17,12 +19,14 @@ class DataAnalyser():
 
     def plot_PCA_scores(self, pca_object, labels):
 
+        overlap = [name for name in mcd.CSS4_COLORS]
         markerlist= list(markers.MarkerStyle.markers.keys())
+        # colour_list = matplotlib.colors.Normalize(0, len(pd.unique(labels)))
 
         data =pd.DataFrame(pca_object, index=labels)
         for number, item in enumerate(pd.unique(labels)):
             data_subset=data.loc[item]
-            plt.scatter(data_subset.iloc[:,0], data_subset.iloc[:,1], c='C'+str(number), marker=markerlist[number], label=item)
+            plt.scatter(data_subset.iloc[:,0], data_subset.iloc[:,1], c=overlap[number], marker=markerlist[number], label=item)
         plt.legend()
 
 
@@ -58,7 +62,7 @@ class DataAnalyser():
         #PCAprocessor.find_optimal_PCs(clean_data)
         scores, loadings= PCAprocessor.calculate_PCA(log2=self.log2)
         self.plot_PCA_scores(scores, PCAprocessor.get_sample_samplelabels_for_PCA())
-        self.plot_PCA_loadings(loadings, PCAprocessor.get_value_labels(), write_loadings=False)
+        #self.plot_PCA_loadings(loadings, PCAprocessor.get_value_labels(), write_loadings=False)
         plt.show()
 
 
