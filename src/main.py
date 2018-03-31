@@ -2,33 +2,34 @@ import pandas as pd
 from src.extract_data import extract_load as el
 from src.plot import PCA
 from src.plot import histogram as histplot
-import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.markers as markers
 import matplotlib._color_data as mcd
 import os
-import matplotlib.patches as mpatch
 
-PROTEIN_DATA = os.path.abspath(os.path.join('..', 'data', 'Protein export list.csv'))
-RAW_GCMS = os.path.abspath(os.path.join('..', 'data', 'data2'))
-GCMS_DATA_FUM2 = os.path.abspath(os.path.join('..', 'data', 'fum2 GCMS.csv'))
+PROTEOMICS = os.path.abspath(os.path.join('..', 'data', 'Protein export list.csv'))
+GCMS = os.path.abspath(os.path.join('..', 'data', 'data2'))
 FTIR_DATA = os.path.abspath(os.path.join('..', 'data', 'Cold FTIR.csv'))
 
 class DataAnalyser():
     def __init__(self):
-        self.log2=False
+        self.log2=True
 
     def plot_PCA_scores(self, pca_object, labels):
 
-        overlap = [name for name in mcd.CSS4_COLORS]
+        myplt=plt.subplot(111)
+        box = myplt.get_position()
+        myplt.set_position([box.x0, box.y0, box.width * 0.8, box.height * 0.8])
+
+        colourlist = [name for name in mcd.CSS4_COLORS][9:]
         markerlist= list(markers.MarkerStyle.markers.keys())
-        # colour_list = matplotlib.colors.Normalize(0, len(pd.unique(labels)))
 
         data =pd.DataFrame(pca_object, index=labels)
         for number, item in enumerate(pd.unique(labels)):
             data_subset=data.loc[item]
-            plt.scatter(data_subset.iloc[:,0], data_subset.iloc[:,1], c=overlap[number], marker=markerlist[number], label=item)
-        plt.legend()
+            myplt.scatter(data_subset.iloc[:,0], data_subset.iloc[:,1], c=colourlist[number], marker=markerlist[number], label=item)
+
+        plt.legend(fontsize='small', loc='upper left', bbox_to_anchor=(1, 1))
 
 
 
@@ -54,7 +55,7 @@ class DataAnalyser():
 
     def main(self):
         self.log2=False
-        path = RAW_GCMS
+        path = GCMS
         clean_data = el.transform_to_dataframe(path)
         PCAprocessor = PCA.PCAtransformer(clean_data)
 

@@ -52,6 +52,7 @@ def transform_to_dataframe(path):
                 newindex=pd.Series([data.split('_')[0] for data in data.index.values])
                 data.set_index(keys=newindex, drop = True, inplace = True)
                 data = data.groupby(data.index).sum()
+                # data = data[data.]
                 merged = data if counter is 0 else pd.merge(data, merged, left_index=True, right_index=True)
                 counter+=1
 
