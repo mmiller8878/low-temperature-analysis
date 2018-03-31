@@ -6,12 +6,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.markers as markers
 import matplotlib._color_data as mcd
+import os
 import matplotlib.patches as mpatch
 
-PROTEIN_DATA = '..\data\Protein export list.csv'
-RAW_GCMS= '..\\data\\data2\\'
-GCMS_DATA_FUM2= r'..\data\fum2 GCMS.csv'
-FTIR_DATA='..\data\Cold FTIR.csv'
+PROTEIN_DATA = os.path.abspath(os.path.join('..', 'data', 'Protein export list.csv'))
+RAW_GCMS = os.path.abspath(os.path.join('..', 'data', 'data2'))
+GCMS_DATA_FUM2 = os.path.abspath(os.path.join('..', 'data', 'fum2 GCMS.csv'))
+FTIR_DATA = os.path.abspath(os.path.join('..', 'data', 'Cold FTIR.csv'))
 
 class DataAnalyser():
     def __init__(self):

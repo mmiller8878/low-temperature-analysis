@@ -34,7 +34,7 @@ def transform_to_dataframe(path):
             if 'Cold Day' in filename or 'Control day' in filename:
                 if '~$' in filename:
                     continue
-                data=pd.read_excel(path + filename, index_col=None)
+                data=pd.read_excel(path + '/' + filename, index_col=None)
 
                 data.reset_index(inplace=True)
 
