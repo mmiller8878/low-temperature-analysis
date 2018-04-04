@@ -18,9 +18,9 @@ class DataAnalyser():
     def plot_PCA_scores(self, data_name, pca_object, explained_variance, labels):
 
         myplt=plt.subplot(111)
-        plt.title('{} PCA scores plot'.format(os.path.basename(data_name)))
-        myplt.set_xlabel('PC1 {}%'.format(round(explained_variance[0],2)))
-        myplt.set_ylabel('PC2 {}%'.format(round(explained_variance[1],2)))
+        plt.title('{} PCA scores plot'.format(data_name))
+        myplt.set_xlabel('PC1 {}%'.format(round(explained_variance[0]*100 ,2)))
+        myplt.set_ylabel('PC2 {}%'.format(round(explained_variance[1]*100 ,2)))
 
         box = myplt.get_position()
         myplt.set_position([box.x0, box.y0, box.width * 0.8, box.height * 0.8])
@@ -37,25 +37,27 @@ class DataAnalyser():
 
 
 
-    def plot_PCA_loadings(self, pca_loadings, value_labels, write_loadings=False):
-
+    def plot_PCA_loadings(self, data_name, pca_loadings, explained_variance, value_labels, write_loadings=False):
+        #%TODO make this work with axis labels
         if write_loadings:
             data=pd.DataFrame(data=pca_loadings,columns=value_labels)
             data=data.transpose()
             if self.log2:
-                data.to_csv('..\data\PCA_loadings_log2.csv')
+                data.to_csv('..\data\complete\{}_PCA_loadings_log2.csv'.format(data_name))
             else:
-                data.to_csv('..\data\PCA_loadings.csv')
+                data.to_csv('..\data\complete\{}_PCA_loadings.csv'.format(data_name))
 
-
-
+        myplt1 = plt.subplot(111)
 
         for i, label in enumerate(value_labels):
-            plt.text(pca_loadings[0, i], pca_loadings[1, i], label)
+            myplt.text(pca_loadings[0, i], pca_loadings[1, i], label)
 
         #plt.scatter(pca_loadings[0, :], pca_loadings[1, :],s=0.5)
-        plt.xlim([min(pca_loadings[0]),max(pca_loadings[0])])
-        plt.ylim([min(pca_loadings[1]), max(pca_loadings[1])])
+        #myplt1.title('{} PCA loadings plot'.format(data_name))
+        #myplt1.set_xlabel('PC1 {}%'.format(round(explained_variance[0]*100 ,2)))
+        #myplt1.set_ylabel('PC2 {}%'.format(round(explained_variance[1]*100 ,2)))
+        myplt1.xlim([min(pca_loadings[0]),max(pca_loadings[0])])
+        myplt1.ylim([min(pca_loadings[1]), max(pca_loadings[1])])
 
     def main(self):
         self.log2=True
@@ -67,8 +69,8 @@ class DataAnalyser():
         #histplot.plot_histogram(clean_data)
         #PCAprocessor.find_optimal_PCs(clean_data)
         scores, loadings, explained_variance = PCAprocessor.calculate_PCA(log2=self.log2)
-        self.plot_PCA_scores(path, scores, explained_variance, PCAprocessor.get_sample_samplelabels_for_PCA())
-        #self.plot_PCA_loadings(path, loadings, PCAprocessor.get_value_labels(), write_loadings=False)
+        #self.plot_PCA_scores(os.path.basename(path), scores, explained_variance, PCAprocessor.get_sample_samplelabels_for_PCA())
+        self.plot_PCA_loadings(os.path.basename(path), loadings, explained_variance, PCAprocessor.get_value_labels(), write_loadings=False)
         plt.show()
 
 

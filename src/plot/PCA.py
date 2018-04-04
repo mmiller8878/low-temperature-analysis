@@ -13,7 +13,7 @@ class PCAtransformer():
 
         self.samplelabels=list(self.raw_DF.columns[1:])
         self.samplelabels_for_PCA=self._sample_no_removed(self.samplelabels)
-        self.valuelabels=list(self.raw_DF.iloc[:,0])
+        self.valuelabels=list(self.raw_DF.index)
         self.processed_DF = None
 
         if self.processed_DF == None:

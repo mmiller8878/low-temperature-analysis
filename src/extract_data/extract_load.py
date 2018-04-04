@@ -21,9 +21,11 @@ def transform_to_dataframe(path):
         clean_data['Name']=data['Description']
         cols = clean_data.columns
         clean_data = clean_data[['Accession']]
+
         clean_data.rename({'Accession':'labels'}, axis='columns')
         clean_data[COLUMNS]=data.loc[:,'WT Cntl 1':'fum2 Cold 4']
         clean_data[COLUMNS] = clean_data[COLUMNS].apply(pd.to_numeric)
+        clean_data.set_index(keys='Accession', drop=True, inplace=True)
         return  clean_data
 
     else:
