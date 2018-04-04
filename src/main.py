@@ -8,16 +8,20 @@ import matplotlib._color_data as mcd
 import os
 
 PROTEOMICS = os.path.abspath(os.path.join('..', 'data', 'Protein export list.csv'))
-GCMS = os.path.abspath(os.path.join('..', 'data', 'data2'))
+GCMS = os.path.abspath(os.path.join('..', 'data', 'GCMS'))
 FTIR_DATA = os.path.abspath(os.path.join('..', 'data', 'Cold FTIR.csv'))
 
 class DataAnalyser():
     def __init__(self):
         self.log2=True
 
-    def plot_PCA_scores(self, pca_object, labels):
+    def plot_PCA_scores(self, data_name, pca_object, explained_variance, labels):
 
         myplt=plt.subplot(111)
+        plt.title('{} PCA scores plot'.format(os.path.basename(data_name)))
+        myplt.set_xlabel('PC1 {}%'.format(round(explained_variance[0],2)))
+        myplt.set_ylabel('PC2 {}%'.format(round(explained_variance[1],2)))
+
         box = myplt.get_position()
         myplt.set_position([box.x0, box.y0, box.width * 0.8, box.height * 0.8])
 
@@ -29,7 +33,7 @@ class DataAnalyser():
             data_subset=data.loc[item]
             myplt.scatter(data_subset.iloc[:,0], data_subset.iloc[:,1], c=colourlist[number], marker=markerlist[number], label=item)
 
-        plt.legend(fontsize='small', loc='upper left', bbox_to_anchor=(1, 1))
+        plt.legend(fontsize='x-small', loc='upper left', bbox_to_anchor=(1, 1))
 
 
 
@@ -54,17 +58,17 @@ class DataAnalyser():
         plt.ylim([min(pca_loadings[1]), max(pca_loadings[1])])
 
     def main(self):
-        self.log2=False
+        self.log2=True
         path = GCMS
         clean_data = el.transform_to_dataframe(path)
-        PCAprocessor = PCA.PCAtransformer(clean_data)
+        PCAprocessor = PCA.PCAtransformer(clean_data, log2 = self.log2)
 
 
         #histplot.plot_histogram(clean_data)
         #PCAprocessor.find_optimal_PCs(clean_data)
-        scores, loadings= PCAprocessor.calculate_PCA(log2=self.log2)
-        self.plot_PCA_scores(scores, PCAprocessor.get_sample_samplelabels_for_PCA())
-        #self.plot_PCA_loadings(loadings, PCAprocessor.get_value_labels(), write_loadings=False)
+        scores, loadings, explained_variance = PCAprocessor.calculate_PCA(log2=self.log2)
+        self.plot_PCA_scores(path, scores, explained_variance, PCAprocessor.get_sample_samplelabels_for_PCA())
+        #self.plot_PCA_loadings(path, loadings, PCAprocessor.get_value_labels(), write_loadings=False)
         plt.show()
 
 
